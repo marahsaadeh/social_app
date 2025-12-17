@@ -5,6 +5,7 @@ import 'package:social_app/screens/home.dart';
 import 'package:social_app/screens/profile.dart';
 import 'package:social_app/screens/search.dart';
 import 'package:social_app/shared/colors.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MobileScerren extends StatefulWidget {
   const MobileScerren({Key? key}) : super(key: key);
@@ -30,13 +31,11 @@ class _MobileScerrenState extends State<MobileScerren> {
       bottomNavigationBar: CupertinoTabBar(
           backgroundColor: mobileBackgroundColor,
           onTap: (index) {
-            // navigate to the tabed page
+            
             _pageController.jumpToPage(index);
             setState(() {
               currentPage = index;
             });
-
-            // print(   "---------------    $index "  );
           },
           items: [
             BottomNavigationBarItem(
@@ -80,7 +79,7 @@ class _MobileScerrenState extends State<MobileScerren> {
           Home(),
           Search(),
           AddPost(),
-          Center(child: Text(" ♥ ♥ ♥ ♥ ")),
+          Center(child: Text("♥♥♥♥")),
           Profile(),
         ],
       ),
