@@ -33,9 +33,9 @@ class _HomeState extends State<Home> {
               ],
               backgroundColor: mobileBackgroundColor,
               title: SvgPicture.asset(
-                "assets/img/instagram.svg",
-                color: primaryColor,
-                height: 32,
+                "assets/img/social_app.svg",
+              //  color: primaryColor,
+                height: 70,
               ),
             ),
       body: Container(
@@ -60,10 +60,10 @@ class _HomeState extends State<Home> {
                           color: Color.fromARGB(125, 78, 91, 110),
                         ),
                         child: CircleAvatar(
-                          radius: 33,
-                          backgroundImage: NetworkImage(
-                              "https://i.pinimg.com/1200x/f6/ea/9f/f6ea9fb2aaa0ed800afdca678611882d.jpg"),
-                        ),
+  radius: 33,
+  backgroundImage: AssetImage("assets/img/porf.jpg"),
+),
+
                       ),
                       SizedBox(
                         width: 17,
@@ -79,13 +79,13 @@ class _HomeState extends State<Home> {
                 ],
               ),
             ),
-            Image.network(
-              // widget.snap["postUrl"],
-              "https://i.pinimg.com/736x/f6/73/fa/f673fa7ac69952451af274bc78aef1ae.jpg",
-              fit: BoxFit.cover,
-              height: MediaQuery.of(context).size.height * 0.35,
-              width: double.infinity,
-            ),
+            Image.asset(
+  "assets/img/post.jpg",
+  fit: BoxFit.cover,
+  height: MediaQuery.of(context).size.height * 0.35,
+  width: double.infinity,
+)
+,
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 11),
               child: Row(
@@ -152,7 +152,7 @@ class _HomeState extends State<Home> {
                   margin: EdgeInsets.fromLTRB(10, 13, 9, 10),
                   width: double.infinity,
                   child: Text(
-                    "view all 100 comments",
+                    "view all 4 comments",
                     style: TextStyle(
                         fontSize: 18,
                         color: Color.fromARGB(214, 157, 157, 165)),

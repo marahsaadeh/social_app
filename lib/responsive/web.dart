@@ -77,7 +77,7 @@ class _WebScerrenState extends State<WebScerren> {
         ],
         backgroundColor: mobileBackgroundColor,
         title: SvgPicture.asset(
-          "assets/img/instagram.svg",
+          "assets/img/social_app.svg",
           color: primaryColor,
           height: 32,
         ),
@@ -91,7 +91,7 @@ class _WebScerrenState extends State<WebScerren> {
           Home(),
           Search(),
           AddPost(),
-          Center(child: Text("Love u ♥")),
+          Center(child: Text("♥")),
           Profile(),
         ],
       ),

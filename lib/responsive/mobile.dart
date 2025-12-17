@@ -29,46 +29,51 @@ class _MobileScerrenState extends State<MobileScerren> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CupertinoTabBar(
-          backgroundColor: mobileBackgroundColor,
-          onTap: (index) {
-            
-            _pageController.jumpToPage(index);
-            setState(() {
-              currentPage = index;
-            });
-          },
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.home,
-                  color: currentPage == 0 ? primaryColor : secondaryColor,
-                ),
-                label: ""),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.search,
-                  color: currentPage == 1 ? primaryColor : secondaryColor,
-                ),
-                label: ""),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.add_circle,
-                  color: currentPage == 2 ? primaryColor : secondaryColor,
-                ),
-                label: ""),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.favorite,
-                  color: currentPage == 3 ? primaryColor : secondaryColor,
-                ),
-                label: ""),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.person,
-                  color: currentPage == 4 ? primaryColor : secondaryColor,
-                ),
-                label: ""),
-          ]),
+        backgroundColor: mobileBackgroundColor,
+        onTap: (index) {
+          _pageController.jumpToPage(index);
+          setState(() {
+            currentPage = index;
+          });
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.home,
+              color: currentPage == 0 ? primaryColor : secondaryColor,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.search,
+              color: currentPage == 1 ? primaryColor : secondaryColor,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.add_circle,
+              color: currentPage == 2 ? primaryColor : secondaryColor,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.favorite,
+              color: currentPage == 3 ? primaryColor : secondaryColor,
+            ),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.person,
+              color: currentPage == 4 ? primaryColor : secondaryColor,
+            ),
+            label: "",
+          ),
+        ],
+      ),
       body: PageView(
         onPageChanged: (index) {
           print("------- $index");
@@ -79,6 +84,7 @@ class _MobileScerrenState extends State<MobileScerren> {
           Home(),
           Search(),
           AddPost(),
+
           Center(child: Text("♥♥♥♥")),
           Profile(),
         ],
