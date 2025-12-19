@@ -1,9 +1,14 @@
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:social_app/firebase_services/auth.dart';
 import 'package:social_app/screens/sign_in.dart';
 import 'package:social_app/shared/colors.dart';
 import 'package:social_app/shared/contants.dart';
+import 'package:social_app/shared/snackbar.dart';
 import 'dart:io';
 import 'package:path/path.dart' show basename;
 
@@ -16,7 +21,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   bool isVisable = true;
-  File? imgPath;
+  Uint8List? imgPath;
   String? imgName;
 
   final _formKey = GlobalKey<FormState>();
@@ -34,34 +39,118 @@ class _RegisterState extends State<Register> {
   bool hasLowercase = false;
   bool hasSpecialCharacters = false;
 
-  onPasswordChanged(String password) {
-    isPassword8Char = false;
-    isPasswordHas1Number = false;
-    hasUppercase = false;
-    hasLowercase = false;
-    hasSpecialCharacters = false;
-    setState(() {
-      if (password.contains(RegExp(r'.{8,}'))) {
-        isPassword8Char = true;
+  uploadImage2Screen(ImageSource source) async {
+    Navigator.pop(context);
+    final XFile? pickedImg = await ImagePicker().pickImage(source: source);
+    try {
+      if (pickedImg != null) {
+        imgPath = await pickedImg.readAsBytes();
+        setState(() {
+          imgName = basename(pickedImg.path);
+          int random = Random().nextInt(9999999);
+          imgName = "$random$imgName";
+          print(imgName);
+        });
+      } else {
+        print("NO img selected");
       }
-
-      if (password.contains(RegExp(r'[0-9]'))) {
-        isPasswordHas1Number = true;
-      }
-
-      if (password.contains(RegExp(r'[A-Z]'))) {
-        hasUppercase = true;
-      }
-
-      if (password.contains(RegExp(r'[a-z]'))) {
-        hasLowercase = true;
-      }
-
-      if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-        hasSpecialCharacters = true;
-      }
-    });
+    } catch (e) {
+      print("Error => $e");
+    }
   }
+
+  showmodel() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(22),
+          height: 170,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  await uploadImage2Screen(ImageSource.camera);
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.camera, size: 30),
+                    SizedBox(width: 11),
+                    Text("From Camera", style: TextStyle(fontSize: 20)),
+                  ],
+                ),
+              ),
+              SizedBox(height: 22),
+              GestureDetector(
+                onTap: () {
+                  uploadImage2Screen(ImageSource.gallery);
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.photo_outlined, size: 30),
+                    SizedBox(width: 11),
+                    Text("From Gallery", style: TextStyle(fontSize: 20)),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  //   register() async {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+
+  //     try {
+  //       final credential =
+  //           await FirebaseAuth.instance.createUserWithEmailAndPassword(
+  //         email: emailController.text,
+  //         password: passwordController.text,
+  //       );
+
+  // // Upload image to firebase storage
+  //       final storageRef = FirebaseStorage.instance.ref("users-imgs/$imgName");
+  //       await storageRef.putFile(imgPath!);
+  //       String urll = await storageRef.getDownloadURL();
+
+  //       print(credential.user!.uid);
+
+  //       CollectionReference users =
+  //           FirebaseFirestore.instance.collection('userSSS');
+
+  //       users
+  //           .doc(credential.user!.uid)
+  //           .set({
+  //             "imgLink":   urll     ,
+  //             'username': usernameController.text,
+  //             'age': ageController.text,
+  //             "title": titleController.text,
+  //             "email": emailController.text,
+  //             "pass": passwordController.text,
+  //           })
+  //           .then((value) => print("User Added"))
+  //           .catchError((error) => print("Failed to add user: $error"));
+  //     } on FirebaseAuthException catch (e) {
+  //       if (e.code == 'weak-password') {
+  //         showSnackBar(context, "The password provided is too weak.");
+  //       } else if (e.code == 'email-already-in-use') {
+  //         showSnackBar(context, "The account already exists for that email.");
+  //       } else {
+  //         showSnackBar(context, "ERROR - Please try again late");
+  //       }
+  //     } catch (err) {
+  //       showSnackBar(context, err.toString());
+  //     }
+
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
 
   @override
   void dispose() {
@@ -80,7 +169,11 @@ class _RegisterState extends State<Register> {
     final double widthScreen = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: mobileBackgroundColor,
-      appBar: AppBar(title: Text("Register"), elevation: 0),
+      appBar: AppBar(
+        title: Text("Register"),
+        elevation: 0,
+        // backgroundColor: appbarGreen,
+      ),
       body: Center(
         child: Padding(
           padding: widthScreen > 600
@@ -108,25 +201,22 @@ class _RegisterState extends State<Register> {
                                   225,
                                 ),
                                 radius: 71,
+                                // backgroundImage: AssetImage("assets/img/avatar.png"),
                                 backgroundImage: AssetImage(
                                   "assets/img/avatar.png",
                                 ),
                               )
-                            : ClipOval(
-                                child: Image.file(
-                                  imgPath!,
-                                  width: 145,
-                                  height: 145,
-                                  fit: BoxFit.cover,
-                                ),
+                            : CircleAvatar(
+                                radius: 71,
+                                // backgroundImage: AssetImage("assets/img/avatar.png"),
+                                backgroundImage: MemoryImage(imgPath!),
                               ),
                         Positioned(
                           left: 99,
                           bottom: -10,
                           child: IconButton(
                             onPressed: () {
-                              // uploadImage2Screen();
-                              // showmodel();
+                              showmodel();
                             },
                             icon: const Icon(Icons.add_a_photo),
                             color: Color.fromARGB(255, 208, 218, 224),
@@ -178,12 +268,11 @@ class _RegisterState extends State<Register> {
                   ),
                   const SizedBox(height: 22),
                   TextFormField(
-                    onChanged: (password) {
-                      onPasswordChanged(password);
-                    },
+                    onChanged: (password) {},
+                    // we return "null" when something is valid
                     validator: (value) {
-                      return value!.length < 8
-                          ? "Enter at least 8 characters"
+                      return value!.length < 6
+                          ? "Enter at least 6 characters"
                           : null;
                     },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -207,18 +296,30 @@ class _RegisterState extends State<Register> {
                   const SizedBox(height: 33),
                   ElevatedButton(
                     onPressed: () async {
-                      // if (_formKey.currentState!.validate() &&
-                      //     imgName != null &&
-                      //     imgPath != null) {
-                      //   await register();
-                      //   if (!mounted) return;
-                      //   Navigator.pushReplacement(
-                      //     context,
-                      //     MaterialPageRoute(builder: (context) => Login()),
-                      //   );
-                      // } else {
-                      //   showSnackBar(context, "ERROR");
-                      // }
+                      if (_formKey.currentState!.validate()
+                      // &&
+                      // imgName != null &&
+                      // imgPath != null
+                      ) {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await AuthMethods().register(
+                          emailll: emailController.text,
+                          passworddd: passwordController.text,
+                          context: context,
+                        );
+                        setState(() {
+                          isLoading = false;
+                        });
+                        if (!mounted) return;
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Login()),
+                        );
+                      } else {
+                        showSnackBar(context, "ERROR");
+                      }
                     },
                     child: isLoading
                         ? CircularProgressIndicator(color: Colors.white)

@@ -10,198 +10,124 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   @override
-  Widget build(BuildContext context) {
-    final double widthScreen = MediaQuery.of(context).size.width;
-    return Scaffold(
-      backgroundColor: mobileBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
-        title: Text("Marah Saadeh"),
-      ),
-      body: Column(
-        children: [
-          Row(
-            children: [
+  // داخل الـ build method
+Widget build(BuildContext context) {
+  final double widthScreen = MediaQuery.of(context).size.width;
+  bool isWeb = widthScreen > 600;
+
+  return Scaffold(
+    backgroundColor:Color.fromARGB(255, 50, 50, 53),
+    appBar: AppBar(
+      backgroundColor:Color.fromARGB(255, 217, 133, 223),
+      centerTitle: false, // ليعطي طابع الويب
+    ),
+    body: Center( // لضمان توسط المحتوى في الشاشة
+      child: Container(
+        constraints: BoxConstraints(maxWidth: 935), // العرض القياسي لصفحات البروفايل
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            // Header Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: isWeb ? 70 : 40, // تكبير الصورة في الويب
+                    backgroundImage: AssetImage("assets/img/porf.jpg"),
+                  ),
+                  const SizedBox(width: 40),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Marah Saadeh", style: TextStyle(fontSize: 24, fontWeight: FontWeight.w300)),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _buildStatColumn("1", "Posts"),
+                            _buildStatColumn("8", "Followers"),
+                            _buildStatColumn("15", "Following"),
+                          ],
+                        ),
+                        if (isWeb) ...[ // إظهار البيو والأزرار بجانب الصورة في الويب
+                           const SizedBox(height: 20),
+                           Text("Happiness", style: TextStyle(fontWeight: FontWeight.bold)),
+                           const SizedBox(height: 20),
+                           _buildActionButtons(isWeb),
+                        ]
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (!isWeb) ...[ // للنسخة المصغرة (موبايل)
               Container(
-                margin: EdgeInsets.only(left: 22),
-                padding: EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color.fromARGB(125, 78, 91, 110),
-                ),
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage("assets/img/porf.jpg"),
-                ),
+                padding: EdgeInsets.all(20),
+                width: double.infinity,
+                child: Text("Happiness"),
               ),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      children: [
-                        Text(
-                          "1",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Posts",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 17),
-                    Column(
-                      children: [
-                        Text(
-                          "8",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Followers",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 17),
-                    Column(
-                      children: [
-                        Text(
-                          "15",
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 5),
-                        Text(
-                          "Following",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+              _buildActionButtons(isWeb),
             ],
-          ),
-          Container(
-            margin: EdgeInsets.fromLTRB(15, 21, 0, 0),
-            width: double.infinity,
-            child: Text("happiness"),
-          ),
-          SizedBox(height: 15),
-          Divider(
-            color: Colors.white,
-            thickness: widthScreen > 600 ? 0.06 : 0.44,
-          ),
-          SizedBox(height: 9),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.edit, color: Colors.grey, size: 24.0),
-                label: Text("Edit profile", style: TextStyle(fontSize: 17)),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    Color.fromARGB(0, 90, 103, 223),
-                  ),
-                  padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(
-                      vertical: widthScreen > 600 ? 19 : 10,
-                      horizontal: 33,
-                    ),
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7),
-                      side: BorderSide(
-                        color: Color.fromARGB(109, 255, 255, 255),
-                        // width: 1,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(width: 15),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.logout, size: 24.0),
-                label: Text("Log out", style: TextStyle(fontSize: 17)),
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    Color.fromARGB(143, 255, 55, 112),
-                  ),
-                  padding: MaterialStateProperty.all(
-                    EdgeInsets.symmetric(
-                      vertical: widthScreen > 600 ? 19 : 10,
-                      horizontal: 33,
-                    ),
-                  ),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(7),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 9),
-          Divider(
-            color: Colors.white,
-            thickness: widthScreen > 600 ? 0.06 : 0.44,
-          ),
-          SizedBox(height: 19),
-          Expanded(
-            child: Padding(
-              padding: widthScreen > 600
-                  ? const EdgeInsets.all(66.0)
-                  : const EdgeInsets.all(3.0),
+            const SizedBox(height: 20),
+            Divider(color: Colors.grey[800]),
+            // Grid Section
+            Expanded(
               child: GridView.builder(
+                padding: const EdgeInsets.all(5),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3 / 2,
+                  crossAxisCount: isWeb ? 3 : 2, // 3 صور بالعرض في الويب
+                  childAspectRatio: 1, // صور مربعة احترافية
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
                 itemCount: 3,
-                itemBuilder: (BuildContext context, int index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Image.asset(
-                      "assets/img/post.jpg",
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
+                itemBuilder: (context, index) => ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.asset("assets/img/post.jpg", fit: BoxFit.cover),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    );
-  }
+    ),
+  );
 }
+
+// Widget مساعد للأزرار لتقليل تكرار الكود
+Widget _buildActionButtons(bool isWeb) {
+  return Row(
+    children: [
+      Expanded(
+        child: OutlinedButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.edit, size: 18),
+          label: Text("Edit profile"),
+          style: OutlinedButton.styleFrom(foregroundColor: Colors.white),
+        ),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: ElevatedButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.logout, size: 18),
+          label: Text("Log out"),
+          style: ElevatedButton.styleFrom(backgroundColor: const Color.fromARGB(255, 156, 76, 108)),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget _buildStatColumn(String value, String label) {
+  return Column(
+    children: [
+      Text(value, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      Text(label, style: TextStyle(color: Colors.grey)),
+    ],
+  );
+}
+  }

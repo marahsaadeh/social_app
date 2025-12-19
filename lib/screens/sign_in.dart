@@ -16,7 +16,6 @@ class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
-
   @override
   void dispose() {
     emailController.dispose();
@@ -27,7 +26,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final double widthScreen = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: mobileBackgroundColor,
       appBar: AppBar(title: Text("Sign in")),
